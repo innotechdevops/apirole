@@ -2,10 +2,11 @@ package apirole
 
 import (
 	"context"
+	"log"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"log"
 )
 
 // DataSource is the interface
@@ -27,6 +28,7 @@ type DataSource interface {
 	GetPolicyAll() ([]Policy, error)
 	GetPolicyById(id string) (Policy, error)
 	GetPolicyByRoleId(id string) (Policy, error)
+	GetPolicyListByRoleId(id string) ([]Policy, error)
 	UpdatePolicy(data Policy) error
 	PolicyExist(data Policy) bool
 }
@@ -144,7 +146,7 @@ func (d *dataSource) GetRoleUserByRoleId(id string) (RoleUser, error) {
 	collection := d.MgoDB.Collection("role_user")
 	var result RoleUser
 	filter := bson.D{{"roleId", id}}
-	log.Println("filter",filter)
+	log.Println("filter", filter)
 	err := collection.FindOne(context.Background(), filter).Decode(&result)
 	if err != nil {
 		log.Println(err)
@@ -244,6 +246,29 @@ func (d *dataSource) GetPolicyByRoleId(id string) (Policy, error) {
 		return Policy{}, err
 	}
 	return result, nil
+}
+
+func (d *dataSource) GetPolicyListByRoleId(id string) ([]Policy, error) {
+	collection := d.MgoDB.Collection("casbin_rule")
+	results := []Policy{}
+	filter := bson.D{{"v0", id}}
+	cursor, err := collection.Find(context.Background(), filter)
+	if err != nil {
+		log.Println(err)
+		return []Policy{}, err
+	}
+	for cursor.Next(context.Background()) {
+		var elem Policy
+		if err := cursor.Decode(&elem); err == nil {
+			results = append(results, elem)
+		}
+	}
+	if err := cursor.Err(); err != nil {
+		log.Println(err)
+		return []Policy{}, err
+	}
+	_ = cursor.Close(context.Background())
+	return results, nil
 }
 
 func (d *dataSource) UpdatePolicy(data Policy) error {

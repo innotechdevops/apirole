@@ -17,6 +17,7 @@ type UseCase interface {
 
 	GetPolicyAll() ([]Policy, error)
 	GetPolicyById(id string) (Policy, error)
+	GetPolicyListByRoleId(id string) ([]Policy, error)
 	AddPolicy(data *Policy) error
 	UpdatePolicy(data Policy) error
 	DeletePolicy(id string) error
@@ -81,6 +82,10 @@ func (u *useCase) GetPolicyAll() ([]Policy, error) {
 
 func (u *useCase) GetPolicyById(id string) (Policy, error) {
 	return u.Repo.GetPolicyById(id)
+}
+
+func (u *useCase) GetPolicyListByRoleId(id string) ([]Policy, error) {
+	return u.Repo.GetPolicyListByRoleId(id)
 }
 
 func (u *useCase) AddPolicy(data *Policy) error {

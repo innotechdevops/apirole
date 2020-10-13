@@ -1,9 +1,10 @@
 package apirole
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"net/http"
 	"time"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 // Handler is the interface
@@ -21,6 +22,7 @@ type Handler interface {
 	DeleteRoleUser(c *fiber.Ctx) error
 
 	GetPolicyByID(c *fiber.Ctx) error
+	GetPolicyListByRoleId(c *fiber.Ctx) error
 	GetPolicyList(c *fiber.Ctx) error
 	CreatePolicy(c *fiber.Ctx) error
 	UpdatePolicy(c *fiber.Ctx) error
@@ -151,6 +153,14 @@ func (h *handler) DeleteRoleUser(c *fiber.Ctx) error {
 func (h *handler) GetPolicyByID(c *fiber.Ctx) error {
 	id := c.Params("id")
 	if r, err := h.Uc.GetPolicyById(id); err == nil {
+		return c.Status(http.StatusOK).JSON(r)
+	}
+	return fiber.ErrBadRequest
+}
+
+func (h *handler) GetPolicyListByRoleId(c *fiber.Ctx) error {
+	id := c.Params("id")
+	if r, err := h.Uc.GetPolicyListByRoleId(id); err == nil {
 		return c.Status(http.StatusOK).JSON(r)
 	}
 	return fiber.ErrBadRequest

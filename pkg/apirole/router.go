@@ -28,6 +28,7 @@ func (r *router) Initial(e *fiber.App) {
 
 		v1.Get("/rolepolicy", r.Handle.GetPolicyList)
 		v1.Get("/rolepolicy/:id", r.Handle.GetPolicyByID)
+		v1.Get("/rolepolicy/role/:id", r.Handle.GetPolicyListByRoleId)
 		v1.Post("/rolepolicy", r.Handle.CreatePolicy)
 		v1.Put("/rolepolicy/:id", r.Handle.UpdatePolicy)
 		v1.Delete("/rolepolicy/:id", r.Handle.DeletePolicy)

@@ -2,6 +2,7 @@ package apirole
 
 import (
 	"fmt"
+
 	"github.com/casbin/casbin/v2"
 )
 
@@ -22,6 +23,7 @@ type Repository interface {
 
 	GetPolicyAll() ([]Policy, error)
 	GetPolicyById(id string) (Policy, error)
+	GetPolicyListByRoleId(id string) ([]Policy, error)
 	AddPolicy(data *Policy) error
 	UpdatePolicy(data Policy) error
 	DeletePolicy(id string) error
@@ -92,6 +94,10 @@ func (r *repository) GetPolicyAll() ([]Policy, error) {
 
 func (r *repository) GetPolicyById(id string) (Policy, error) {
 	return r.Source.GetPolicyById(id)
+}
+
+func (r *repository) GetPolicyListByRoleId(id string) ([]Policy, error) {
+	return r.Source.GetPolicyListByRoleId(id)
 }
 
 func (r *repository) AddPolicy(data *Policy) error {
