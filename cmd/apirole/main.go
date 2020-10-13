@@ -6,6 +6,7 @@ import (
 	"github.com/casbin/casbin/v2"
 	mongodbadapter "github.com/casbin/mongodb-adapter/v3"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/innotechdevops/mgo-driver/pkg/mgodriver"
 	"github.com/prongbang/apirole/pkg/apirole"
 	fibercasbinrest "github.com/prongbang/fiber-casbinrest"
@@ -24,11 +25,15 @@ func main() {
 
 	_ = e.LoadPolicy()
 
-	_, _ = e.AddPolicy("5f82de37aacb828dc9466173", "/*", "(GET)|(POST)|(PUT)|(DELETE)")
-	//_, err := e.RemovePolicy("5f82de37aacb828dc9466173", "/*", "(GET)|(POST)|(PUT)|(DELETE)")
-	//log.Println(err)
+	// _, _ = e.AddPolicy("5f82de37aacb828dc9466173", "/*", "(GET)|(POST)|(PUT)|(DELETE)")
+	//_, _ := e.RemovePolicy("5f82de37aacb828dc9466173", "/*", "(GET)|(POST)|(PUT)|(DELETE)")
 
 	app := fiber.New()
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "http://localhost:3000",
+		AllowHeaders: "X-Platform,X-Api-Key,Authorization,Access-Control-Allow-Credentials,Access-Control-Allow-Origin,Origin,Content-Type,Accept",
+		AllowMethods: "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS",
+	}))
 	app.Use(fibercasbinrest.NewDefault(e, "secret"))
 
 	// Router
@@ -39,5 +44,5 @@ func main() {
 	route := apirole.NewRouter(handle)
 	route.Initial(app)
 
-	log.Fatal(app.Listen(":3000"))
+	log.Fatal(app.Listen(":3500"))
 }
