@@ -13,6 +13,7 @@ type Repository interface {
 	AddRole(data *Roles) error
 	UpdateRole(data Roles) error
 	DeleteRole(id string) error
+	CheckRoleDisplayExist(display string) Roles
 
 	GetRoleUserAll() ([]RoleUser, error)
 	GetRoleUserById(id string) (RoleUser, error)
@@ -62,6 +63,10 @@ func (r *repository) DeleteRole(id string) error {
 		return r.Source.DeleteRole(id)
 	}
 	return fmt.Errorf("%s", "Has row reference in policy or role user collection")
+}
+
+func (r *repository) CheckRoleDisplayExist(display string) Roles {
+	return r.Source.CheckRoleDisplayExist(display)
 }
 
 func (r *repository) GetRoleUserAll() ([]RoleUser, error) {

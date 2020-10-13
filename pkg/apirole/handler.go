@@ -53,6 +53,14 @@ func (h *handler) CreateRole(c *fiber.Ctx) error {
 	if err := c.BodyParser(&r); err != nil || r.Display == "" || r.Description == "" {
 		return fiber.ErrBadRequest
 	}
+
+	rExist := h.Uc.CheckRoleDisplayExist(r.Display)
+	if !rExist.ID.IsZero() {
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+			"message": "The display name is exist, Please enter a unique name.",
+		})
+	}
+
 	r.CreatedAt = time.Now()
 	if err := h.Uc.AddRole(&r); err == nil {
 		return c.Status(http.StatusCreated).JSON(r)
@@ -66,6 +74,14 @@ func (h *handler) UpdateRole(c *fiber.Ctx) error {
 	if err := c.BodyParser(&r); err != nil || id == "" || r.Display == "" || r.Description == "" {
 		return fiber.ErrBadRequest
 	}
+
+	rExist := h.Uc.CheckRoleDisplayExist(r.Display)
+	if rExist.ID.Hex() != id {
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+			"message": "The display name is exist, Please enter a unique name.",
+		})
+	}
+
 	if role, err := h.Uc.GetRoleById(id); err == nil {
 		role.Display = r.Display
 		role.Description = r.Description

@@ -7,6 +7,7 @@ type UseCase interface {
 	AddRole(data *Roles) error
 	UpdateRole(data Roles) error
 	DeleteRole(id string) error
+	CheckRoleDisplayExist(display string) Roles
 
 	GetRoleUserAll() ([]RoleUser, error)
 	GetRoleUserById(id string) (RoleUser, error)
@@ -50,6 +51,10 @@ func (u *useCase) UpdateRole(data Roles) error {
 
 func (u *useCase) DeleteRole(id string) error {
 	return u.Repo.DeleteRole(id)
+}
+
+func (u *useCase) CheckRoleDisplayExist(display string) Roles {
+	return u.Repo.CheckRoleDisplayExist(display)
 }
 
 func (u *useCase) GetRoleUserAll() ([]RoleUser, error) {

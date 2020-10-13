@@ -16,6 +16,7 @@ type DataSource interface {
 	AddRole(data *Roles) error
 	UpdateRole(data Roles) error
 	DeleteRole(id string) error
+	CheckRoleDisplayExist(display string) Roles
 
 	GetRoleUserAll() ([]RoleUser, error)
 	GetRoleUserById(id string) (RoleUser, error)
@@ -104,6 +105,18 @@ func (d *dataSource) DeleteRole(id string) error {
 		return err
 	}
 	return nil
+}
+
+func (d *dataSource) CheckRoleDisplayExist(display string) Roles {
+	collection := d.MgoDB.Collection("roles")
+	result := Roles{}
+	filter := bson.D{{"display", display}}
+	err := collection.FindOne(context.Background(), filter).Decode(&result)
+	if err != nil {
+		log.Println(err)
+		return Roles{}
+	}
+	return result
 }
 
 func (d *dataSource) GetRoleUserAll() ([]RoleUser, error) {
