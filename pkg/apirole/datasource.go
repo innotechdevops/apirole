@@ -236,7 +236,7 @@ func (d *dataSource) GetPolicyAll() ([]Policy, error) {
 
 func (d *dataSource) GetPolicyById(id string) (Policy, error) {
 	collection := d.MgoDB.Collection("casbin_rule")
-	var result Policy
+	result := Policy{}
 	objId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return Policy{}, err

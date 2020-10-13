@@ -117,7 +117,7 @@ func (r *repository) AddPolicy(data *Policy) error {
 func (r *repository) UpdatePolicy(data Policy) error {
 	err := r.Source.UpdatePolicy(data)
 	if err == nil {
-		_ = r.Enforcer.SavePolicy()
+		// _ = r.Enforcer.SavePolicy()
 		return r.Enforcer.LoadPolicy()
 	}
 	return err

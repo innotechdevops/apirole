@@ -211,7 +211,6 @@ func (h *handler) UpdatePolicy(c *fiber.Ctx) error {
 	if err := c.BodyParser(&r); err != nil || id == "" || r.RoleId == "" || r.Path == "" || r.Method == "" {
 		return fiber.ErrBadRequest
 	}
-
 	if role, err := h.Uc.GetPolicyById(id); err == nil {
 		role.RoleId = r.RoleId
 		role.Path = r.Path
