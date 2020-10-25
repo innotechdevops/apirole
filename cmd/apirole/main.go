@@ -25,9 +25,6 @@ func main() {
 
 	_ = e.LoadPolicy()
 
-	// _, _ = e.AddPolicy("5f82de37aacb828dc9466173", "/*", "(GET)|(POST)|(PUT)|(DELETE)")
-	//_, _ := e.RemovePolicy("5f82de37aacb828dc9466173", "/*", "(GET)|(POST)|(PUT)|(DELETE)")
-
 	app := fiber.New()
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: "http://localhost:3000",
