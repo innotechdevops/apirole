@@ -18,6 +18,8 @@ $ go get github.com/innotechdevops/apirole
 - roles
 ```
 
+#### Roles
+
 - Insert document role `Admin` in collection `roles`
 
 ```json
@@ -51,6 +53,58 @@ $ go get github.com/innotechdevops/apirole
     "updatedat": {
         "$date": "2020-10-02T01:11:18.965Z"
     }    
+}
+```
+
+#### User Role
+
+- Insert document user role `Admin` in collection `role_user`
+
+```json
+{
+  "_id": {
+    "$oid": "5fa810e34b40271bd002c8b8"
+  },
+  "roleId": "5f95a41f2e94e13067a087e0",
+  "userId": {
+    "$numberLong": "1"
+  }
+}
+```
+
+### Policy
+
+- Insert document policy `Admin` in collection `casbin_role`
+
+```json
+{
+  "_id": {
+    "$oid": "5f95aa6e88b79b68f8b18396"
+  },
+  "ptype": "p",
+  "v0": "5fa810e34b40271bd002c8b8",
+  "v1": "/*",
+  "v2": "(GET)|(POST)|(PUT)|(DELETE)",
+  "v3": "",
+  "v4": "",
+  "v5": ""
+}
+```
+
+- Insert document policy `Annonymous` in collection `casbin_role`
+
+```json
+{
+  "_id": {
+    "$oid": "5f95aa6e88b79b68f8b1839b"
+  },
+  "ptype": "p",
+  "v0": "anonymous",
+  "v1": "/v1/login",
+  "v2": "(POST)",
+  "v3": "",
+  "v4": "",
+  "v5": ""
 }
 ```
 
