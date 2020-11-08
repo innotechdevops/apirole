@@ -2,6 +2,7 @@ package apirole
 
 import (
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -176,8 +177,17 @@ func (h *handler) GetPolicyByID(c *fiber.Ctx) error {
 
 func (h *handler) GetPolicyListByRoleId(c *fiber.Ctx) error {
 	id := c.Params("id")
+
+	role, _ := h.Uc.GetRoleById(id)
+	if strings.ToLower(role.Display) == RoleAnonymous {
+		id = RoleAnonymous
+	}
+
 	if r, err := h.Uc.GetPolicyListByRoleId(id); err == nil {
-		return c.Status(http.StatusOK).JSON(r)
+		return c.Status(http.StatusOK).JSON(fiber.Map{
+			"role":     role.Display,
+			"policies": r,
+		})
 	}
 	return fiber.ErrBadRequest
 }
@@ -193,6 +203,13 @@ func (h *handler) CreatePolicy(c *fiber.Ctx) error {
 	p := Policy{}
 	if err := c.BodyParser(&p); err != nil || p.RoleId == "" || p.Method == "" || p.Path == "" {
 		return fiber.ErrBadRequest
+	}
+
+	r, err := h.Uc.GetRoleById(p.RoleId)
+	if err == nil {
+		if strings.ToLower(r.Display) == RoleAnonymous {
+			p.RoleId = RoleAnonymous
+		}
 	}
 
 	if isExist := h.Uc.PolicyExist(p); isExist {
@@ -211,6 +228,15 @@ func (h *handler) UpdatePolicy(c *fiber.Ctx) error {
 	if err := c.BodyParser(&r); err != nil || id == "" || r.RoleId == "" || r.Path == "" || r.Method == "" {
 		return fiber.ErrBadRequest
 	}
+
+	// TODO check anonymous
+	p, err := h.Uc.GetRoleById(r.RoleId)
+	if err == nil {
+		if strings.ToLower(p.Display) == RoleAnonymous {
+			r.RoleId = RoleAnonymous
+		}
+	}
+
 	if role, err := h.Uc.GetPolicyById(id); err == nil {
 		role.RoleId = r.RoleId
 		role.Path = r.Path
@@ -228,6 +254,9 @@ func (h *handler) DeletePolicy(c *fiber.Ctx) error {
 	if id == "" {
 		return fiber.ErrBadRequest
 	}
+
+	// TODO check anonymous
+
 	if err := h.Uc.DeletePolicy(id); err == nil {
 		return c.Status(http.StatusOK).JSON(fiber.Map{"message": "Deleted"})
 	}

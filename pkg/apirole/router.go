@@ -12,7 +12,7 @@ type router struct {
 }
 
 func (r *router) Initial(e *fiber.App) {
-	v1 := e.Group("/api/v1")
+	v1 := e.Group("/v1")
 	{
 		v1.Get("/roles", r.Handle.GetRoleList)
 		v1.Get("/roles/:id", r.Handle.GetRoleByID)

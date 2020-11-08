@@ -57,6 +57,9 @@ func (r *repository) UpdateRole(data Roles) error {
 }
 
 func (r *repository) DeleteRole(id string) error {
+
+	// TODO check anonymous
+
 	_, uErr := r.Source.GetRoleUserByRoleId(id)
 	_, pErr := r.Source.GetPolicyByRoleId(id)
 	if uErr != nil && pErr != nil {

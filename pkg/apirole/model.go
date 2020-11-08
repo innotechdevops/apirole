@@ -6,6 +6,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+const RoleAnonymous = "anonymous"
+
 // Roles a model
 type Roles struct {
 	ID          primitive.ObjectID `json:"id" bson:"_id,omitempty"`
