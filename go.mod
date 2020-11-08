@@ -1,4 +1,4 @@
-module github.com/prongbang/apirole
+module github.com/innotechdevops/apirole
 
 go 1.15
 
